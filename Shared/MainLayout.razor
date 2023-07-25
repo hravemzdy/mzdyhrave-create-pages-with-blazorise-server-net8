@@ -1,0 +1,21 @@
+﻿@using EmployeeManagementApp.Components.Layout
+
+@inherits LayoutComponentBase
+
+<PageTitle>Employee App</PageTitle>
+
+<Layout>
+    <LayoutHeader Fixed>
+        <TopMenu ThemeEnabledChanged="@OnThemeEnabledChanged"
+                ThemeGradientChanged="@OnThemeGradientChanged"
+                ThemeRoundedChanged="@OnThemeRoundedChanged"
+                ThemeColorChanged="@OnThemeColorChanged" />
+    </LayoutHeader>
+    <LayoutContent Padding="Padding.Is4.OnX.Is4.FromTop">
+        @Body
+    </LayoutContent>
+    <LayoutFooter Fixed>
+        <FooterMenu></FooterMenu>
+    </LayoutFooter>
+</Layout>
+
