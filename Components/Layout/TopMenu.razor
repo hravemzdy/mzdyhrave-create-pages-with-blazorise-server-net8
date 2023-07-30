@@ -2,17 +2,8 @@
 
 @namespace EmployeeManagementApp.Components.Layout
 
-<Bar @bind-Visible="@topbarVisible" Breakpoint="Breakpoint.Desktop" Background="Background.Primary" ThemeContrast="ThemeContrast.Light">
-    <BarBrand>
-        <BarItem>
-            <BarLink To="">
-                <BarIcon Margin="Margin.Is2.FromEnd" IconName="IconName.Dashboard" />
-                Employee Management App
-            </BarLink>
-        </BarItem>
-    </BarBrand>
-    <BarToggler />
-    <BarMenu>
+<Bar Breakpoint="Breakpoint.Desktop" Background="Background.Primary" ThemeContrast="ThemeContrast.Light">
+    <BarMenu Padding="Padding.Is3.OnX">
         <BarStart>
             <BarItem>
                 <BarLink To="/">Log work</BarLink>
@@ -28,32 +19,3 @@
         </BarEnd>
     </BarMenu>
 </Bar>
-@code {
-    protected override async Task OnInitializedAsync()
-    {
-        await SelectCulture("en-US");
-
-        await base.OnInitializedAsync();
-    }
-
-    Task SelectCulture(string name)
-    {
-        LocalizationService!.ChangeLanguage(name);
-
-        return Task.CompletedTask;
-    }
-
-    private bool topbarVisible = false;
-
-    [Parameter] public EventCallback<bool> ThemeEnabledChanged { get; set; }
-
-    [Parameter] public EventCallback<bool> ThemeGradientChanged { get; set; }
-
-    [Parameter] public EventCallback<bool> ThemeRoundedChanged { get; set; }
-
-    [Parameter] public EventCallback<string> ThemeColorChanged { get; set; }
-
-    [Inject] protected ITextLocalizerService? LocalizationService { get; set; }
-
-    [CascadingParameter] protected Theme? Theme { get; set; }
-}

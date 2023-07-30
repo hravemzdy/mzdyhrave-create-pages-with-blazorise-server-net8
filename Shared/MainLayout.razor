@@ -11,8 +11,12 @@
                 ThemeRoundedChanged="@OnThemeRoundedChanged"
                 ThemeColorChanged="@OnThemeColorChanged" />
     </LayoutHeader>
-    <LayoutContent Padding="Padding.Is4.OnX.Is4.FromTop">
-        @Body
+    <LayoutContent Padding="Padding.Is3.OnX.Is3.FromTop">
+        <Row>
+            <Column ColumnSize="ColumnSize.Is12">
+                @Body
+            </Column>
+        </Row>
     </LayoutContent>
     <LayoutFooter Fixed>
         <FooterMenu></FooterMenu>
