@@ -1,0 +1,93 @@
+﻿@page "/manage-assignments"
+
+@using EmployeeManagementApp.Models;
+<!-- Grid -->
+<!-- GridItem, PaperContainer, Form (Grid, GridItem (TextField), Grid, GridItem (Button)) -->
+<!-- Worker, Job, Building, ADD ASSIGNMENT -->
+<Row Flex="Flex.JustifyContent.Center">
+    <Column ColumnSize="ColumnSize.Is10">
+        <Fields>
+            <Field>
+                <FieldLabel>Worker</FieldLabel>
+                <Select TValue="string">
+                    @foreach (var worker in WorkersElements)
+                    {
+                        <SelectItem Value="@worker.WorkerId">@worker.WorkerName</SelectItem>
+                    }
+                </Select>
+            </Field>
+            <Field>
+                <FieldLabel>Job</FieldLabel>
+                <Select TValue="string">
+                    @foreach (var job in JobsElements)
+                    {
+                        <SelectItem Value="@job.JobId">@job.JobTitle</SelectItem>
+                    }
+                </Select>
+            </Field>
+            <Field>
+                <FieldLabel>Building</FieldLabel>
+                <Select TValue="string">
+                    @foreach (var building in BuildingsElements)
+                    {
+                        <SelectItem Value="@building.BuildingId">@building.BuildingTitle</SelectItem>
+                    }
+                </Select>
+            </Field>
+        </Fields>
+    </Column>
+</Row>
+
+<Row>
+    <Column ColumnSize="ColumnSize.Is4.Is4.WithOffset">
+        <Fields Flex="Flex.JustifyContent.Center" >
+            <Button Color="Color.Primary" Disabled="@(!assignmentsSuccess)" PreventDefaultOnSubmit>ADD ASSIGNMENT</Button>
+        </Fields>
+    </Column>
+</Row>
+
+@code {
+    private string WorkerValue { get; set; } = "Nothing selected";
+    private string JobValue { get; set; } = "Nothing selected";
+    private string BuildingValue { get; set; } = "Nothing selected";
+
+    bool assignmentsSuccess = false;
+    string[] assignmentsErrors = { };
+
+    private IEnumerable<WorkerTableModel> WorkersElements = new List<WorkerTableModel>();
+
+    private IEnumerable<JobTableModel> JobsElements = new List<JobTableModel>();
+
+    private IEnumerable<BuildingTableModel> BuildingsElements = new List<BuildingTableModel>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        assignmentsSuccess = false;
+
+        WorkersElements = new List<WorkerTableModel>()
+        {
+            new WorkerTableModel() { WorkerId = "1", WorkerName = "Worker First", WorkerAccessCode = "A", DateAdded = "01.01.2023" },
+            new WorkerTableModel() { WorkerId = "2", WorkerName = "Worker Second", WorkerAccessCode = "B", DateAdded = "01.02.2023" },
+            new WorkerTableModel() { WorkerId = "3", WorkerName = "Worker Third", WorkerAccessCode = "C", DateAdded = "01.03.2023" },
+            new WorkerTableModel() { WorkerId = "4", WorkerName = "Worker Four", WorkerAccessCode = "D", DateAdded = "01.04.2023" },
+            new WorkerTableModel() { WorkerId = "5", WorkerName = "Worker Five", WorkerAccessCode = "E", DateAdded = "01.05.2023" },
+        };
+        JobsElements = new List<JobTableModel>()
+        {
+            new JobTableModel() { JobId = "1", JobTitle = "Job First", DateAdded = "01.01.2023" },
+            new JobTableModel() { JobId = "2", JobTitle = "Job Second", DateAdded = "01.02.2023" },
+            new JobTableModel() { JobId = "3", JobTitle = "Job Third", DateAdded = "01.03.2023" },
+            new JobTableModel() { JobId = "4", JobTitle = "Job Four", DateAdded = "01.04.2023" },
+            new JobTableModel() { JobId = "5", JobTitle = "Job Five", DateAdded = "01.05.2023" },
+        };
+        BuildingsElements = new List<BuildingTableModel>()
+        {
+            new BuildingTableModel() { BuildingId = "1", BuildingTitle = "Building First", DateAdded = "01.01.2023" },
+            new BuildingTableModel() { BuildingId = "2", BuildingTitle = "Building Second", DateAdded = "01.02.2023" },
+            new BuildingTableModel() { BuildingId = "3", BuildingTitle = "Building Third", DateAdded = "01.03.2023" },
+            new BuildingTableModel() { BuildingId = "4", BuildingTitle = "Building Four", DateAdded = "01.04.2023" },
+            new BuildingTableModel() { BuildingId = "5", BuildingTitle = "Building Five", DateAdded = "01.05.2023" },
+        };
+    }
+
+}
