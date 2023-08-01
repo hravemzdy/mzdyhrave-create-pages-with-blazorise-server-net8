@@ -29,6 +29,15 @@ public partial class ManageAssetGrid<GItem> : ComponentBase
 
     private string searchString = string.Empty;
 
+    private bool OnModelFilter(GItem model)
+    {
+        if (FilterFunc is not null)
+        {
+            return FilterFunc(model, searchString);
+        }
+        return true;
+    }
+
     private Task OnFilterValueChanged(string e)
     {
         searchString = e;

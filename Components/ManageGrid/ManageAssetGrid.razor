@@ -23,16 +23,18 @@
                 </Column>
             </Row>
             <DataGrid @ref="Grid"
-                      TItem="GItem" Data="Elements" @bind-SelectedRow="@selectedItem" ShowPager
+                      TItem="GItem" Data="Elements" @bind-SelectedRow="@selectedItem" 
+                      CustomFilter="@OnModelFilter"
+                      ShowPager 
                       ShowPageSizes
-                       PagerPosition="DataGridPagerPosition.Bottom"
-                       PagerOptions="new(){ ButtonSize=Size.Small }">
+                      PagerPosition="DataGridPagerPosition.Bottom"
+                      PagerOptions="new(){ ButtonSize=Size.Small }">
                  <DataGridColumns>
                      <DataGridCommandColumn />
                      @foreach (var column in Columns)
-                    {
+                     {
                         <DataGridColumn Field="@column.Field" Caption="@column.Title" Sortable="@column.Sortable" />
-                    }
+                     }
                 </DataGridColumns>
                 <PageButtonTemplate>
                     <Span TextColor="TextColor.Success">
