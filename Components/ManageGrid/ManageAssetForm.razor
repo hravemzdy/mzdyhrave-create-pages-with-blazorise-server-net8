@@ -1,0 +1,59 @@
+﻿@typeparam GItem
+@typeparam FItem
+@inherits ComponentBase
+
+@namespace EmployeeManagementApp.Components.ManageGrid
+
+<CascadingValue Value="@this" IsFixed>
+    <Row Flex="Flex.JustifyContent.Center" Padding="FormPadding">
+        <Column ColumnSize="FormColumnSize">
+            <Fields>
+                <Validations @ref="formValidations" Mode="ValidationMode.Manual" Model="itemToAdd" HandlerType="typeof(FluentValidationHandler)">
+                    @foreach (FormField<GItem, FItem> field in Fields)
+                    {
+                        string? value = itemToAdd.GetType().GetProperty(field.Field)?.GetValue(itemToAdd) as string;
+                        @if (value is not null)
+                        {
+                            @if (field.Template == null)
+                            {
+                                @if (field.Validate)
+                                {
+                                    <Validation>
+                                        <Field>
+                                            <FieldLabel>@field.Label</FieldLabel>
+                                            <TextEdit TValue="string" @bind-Text="@value" @bind-Text:after="OnModelChanged">
+                                                <Feedback>
+                                                    <ValidationError />
+                                                </Feedback>
+                                            </TextEdit>
+                                        </Field>
+                                    </Validation>
+                                }
+                                else
+                                {
+                                    <Field>
+                                        <FieldLabel>@field.Label</FieldLabel>
+                                        <TextEdit TValue="string" @bind-Text="@value" @bind-Text:after="OnModelChanged">
+                                        </TextEdit>
+                                    </Field>
+                                }
+                            }
+                            else
+                            {
+                                @field.Template(value)
+                            }
+                        }
+                    }
+                </Validations>
+                <Field>
+                    <FieldLabel />
+                    <Button Color="Color.Primary" Disabled="@(!formSuccess)" PreventDefaultOnSubmit>@ButtonLabel</Button>
+                </Field>
+            </Fields>
+        </Column>
+    </Row>
+</CascadingValue>
+<CascadingValue Value="@this" IsFixed>
+    @AssetFormFields
+</CascadingValue>
+

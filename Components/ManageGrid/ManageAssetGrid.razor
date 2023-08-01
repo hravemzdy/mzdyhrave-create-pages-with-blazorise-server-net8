@@ -1,0 +1,72 @@
+﻿@typeparam GItem
+@inherits ComponentBase
+
+@using Blazorise.DataGrid
+
+@namespace EmployeeManagementApp.Components.ManageGrid
+<CascadingValue Value="@this" IsFixed>
+    <Row Flex="Flex.JustifyContent.Center">
+        <Column ColumnSize="GridColumnSize">
+            <Row Position="Position.Relative">
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Heading Padding="Padding.Is3.FromBottom" Position="Position.Absolute.Bottom.Is0" Size="HeadingSize.Is4">@Title</Heading>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3.WithOffset">
+                        <Addons>
+                        <Addon AddonType="AddonType.Start">
+                            <AddonLabel><Icon Name="IconName.Search" /></AddonLabel>
+                        </Addon>
+                        <Addon AddonType="AddonType.Body">
+                            <TextEdit Placeholder="Search" Text="@searchString" TextChanged="@OnFilterValueChanged"></TextEdit>
+                        </Addon>
+                    </Addons>
+                </Column>
+            </Row>
+            <DataGrid @ref="Grid"
+                      TItem="GItem" Data="Elements" @bind-SelectedRow="@selectedItem" ShowPager
+                      ShowPageSizes
+                       PagerPosition="DataGridPagerPosition.Bottom"
+                       PagerOptions="new(){ ButtonSize=Size.Small }">
+                 <DataGridColumns>
+                     <DataGridCommandColumn />
+                     @foreach (var column in Columns)
+                    {
+                        <DataGridColumn Field="@column.Field" Caption="@column.Title" Sortable="@column.Sortable" />
+                    }
+                </DataGridColumns>
+                <PageButtonTemplate>
+                    <Span TextColor="TextColor.Success">
+                        @context.PageNumber
+                    </Span>
+                </PageButtonTemplate>
+                <NextPageButtonTemplate><Icon Name="IconName.StepForward" TextColor="TextColor.Success" /></NextPageButtonTemplate>
+                <PreviousPageButtonTemplate><Icon Name="IconName.StepBackward" TextColor="TextColor.Success" /></PreviousPageButtonTemplate>
+                <LastPageButtonTemplate><Icon Name="IconName.Forward" TextColor="TextColor.Success" /></LastPageButtonTemplate>
+                <FirstPageButtonTemplate><Icon Name="IconName.Backward" TextColor="TextColor.Success" /></FirstPageButtonTemplate>
+                <TotalItemsTemplate><Badge Color="Color.Success">@context.TotalItems total items</Badge></TotalItemsTemplate>
+                <TotalItemsShortTemplate><Badge Color="Color.Success">@context.TotalItems</Badge></TotalItemsShortTemplate>
+                <ItemsPerPageTemplate></ItemsPerPageTemplate>
+                <PageSelectorTemplate>
+                    <Select TextColor="TextColor.Success" @bind-SelectedValue="@context.CurrentPage" Size="Size.Small">
+                        @for (int i = context.FirstVisiblePage; i <= context.LastVisiblePage; ++i)
+                        {
+                            var pageNumber = i;
+                            <SelectItem Value="@pageNumber">@pageNumber</SelectItem>
+                        }
+                    </Select>
+                </PageSelectorTemplate>
+                <PageSizesTemplate>
+                    <Select TextColor="TextColor.Success" @bind-SelectedValue="@context.CurrentPageSize" Size="Size.Small">
+                        @foreach (var curPageSize in context.PageSizes)
+                        {
+                            <SelectItem Value="@curPageSize">@curPageSize</SelectItem>
+                        }
+                    </Select>
+                </PageSizesTemplate>
+            </DataGrid>
+        </Column>
+    </Row>
+</CascadingValue>
+<CascadingValue Value="@this" IsFixed>
+    @AssetGridColumns
+</CascadingValue>

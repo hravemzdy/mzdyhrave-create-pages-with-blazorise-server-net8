@@ -1,281 +1,54 @@
 ﻿@page "/manage-assets"
 
 @using Blazorise.DataGrid
+@using EmployeeManagementApp.Components
+@using EmployeeManagementApp.Components.ManageGrid
 @using EmployeeManagementApp.Models;
 
-<!-- Grid -->
-<Row Flex="Flex.JustifyContent.Center">
-    <Column ColumnSize="ColumnSize.Is10">
-        <Row Position="Position.Relative">
-            <Column ColumnSize="ColumnSize.Is3">
-                <Heading Padding="Padding.Is3.FromBottom" Position="Position.Absolute.Bottom.Is0" Size="HeadingSize.Is4">Workers</Heading>
-            </Column>
-            <Column ColumnSize="ColumnSize.Is3.WithOffset">
-                    <Addons>
-                    <Addon AddonType="AddonType.Start">
-                        <AddonLabel><Icon Name="IconName.Search" /></AddonLabel>
-                    </Addon>
-                    <Addon AddonType="AddonType.Body">
-                        <TextEdit Placeholder="Search" Text="@workersSearchString1" TextChanged="@OnWorkersFilterValueChanged"></TextEdit>
-                    </Addon>
-                </Addons>
-            </Column>
-        </Row>
-        <DataGrid @ref="workersGrid"
-                  TItem="WorkerTableModel" Data="WorkersElements" @bind-SelectedRow="@workersSelectedItem1" ShowPager
-                  ShowPageSizes
-                  PagerPosition="DataGridPagerPosition.Bottom"
-                  PagerOptions="new(){ ButtonSize=Size.Small }"
-                  CustomFilter="@WorkersFilterFunc1">
-            <DataGridColumns>
-                <DataGridCommandColumn />
-                <DataGridColumn Field="@nameof(WorkerTableModel.WorkerId)" Caption="Worker Id" Sortable="false" />
-                <DataGridColumn Field="@nameof(WorkerTableModel.WorkerName)" Caption="Worker name" Sortable="false"/>
-                <DataGridColumn Field="@nameof(WorkerTableModel.WorkerAccessCode)" Caption="Worker access code" Sortable="false" />
-                <DataGridColumn Field="@nameof(WorkerTableModel.DateAdded)" Caption="Date added" Sortable="false" />
-            </DataGridColumns>
-            <PageButtonTemplate>
-                <Span TextColor="TextColor.Success">
-                    @context.PageNumber
-                </Span>
-            </PageButtonTemplate>
-            <NextPageButtonTemplate><Icon Name="IconName.StepForward" TextColor="TextColor.Success" /></NextPageButtonTemplate>
-            <PreviousPageButtonTemplate><Icon Name="IconName.StepBackward" TextColor="TextColor.Success" /></PreviousPageButtonTemplate>
-            <LastPageButtonTemplate><Icon Name="IconName.Forward" TextColor="TextColor.Success" /></LastPageButtonTemplate>
-            <FirstPageButtonTemplate><Icon Name="IconName.Backward" TextColor="TextColor.Success" /></FirstPageButtonTemplate>
-            <TotalItemsTemplate><Badge Color="Color.Success">@context.TotalItems total items</Badge></TotalItemsTemplate>
-            <TotalItemsShortTemplate><Badge Color="Color.Success">@context.TotalItems</Badge></TotalItemsShortTemplate>
-            <ItemsPerPageTemplate></ItemsPerPageTemplate>
-            <PageSelectorTemplate>
-                <Select TextColor="TextColor.Success" @bind-SelectedValue="@context.CurrentPage" Size="Size.Small">
-                    @for (int i = context.FirstVisiblePage; i <= context.LastVisiblePage; ++i)
-                    {
-                        var pageNumber = i;
-                        <SelectItem Value="@pageNumber">@pageNumber</SelectItem>
-                    }
-                </Select>
-            </PageSelectorTemplate>
-            <PageSizesTemplate>
-                <Select TextColor="TextColor.Success" @bind-SelectedValue="@context.CurrentPageSize" Size="Size.Small">
-                    @foreach (var curPageSize in context.PageSizes)
-                    {
-                        <SelectItem Value="@curPageSize">@curPageSize</SelectItem>
-                    }
-                </Select>
-            </PageSizesTemplate>
-        </DataGrid>
-    </Column>
-</Row>
-<Row Flex="Flex.JustifyContent.Center">
-    <Column ColumnSize="ColumnSize.Is6">
-        <Fields>
-            <Validations @ref="@workersValidations" Mode="ValidationMode.Manual" Model="@workerToAdd" HandlerType="typeof(FluentValidationHandler)">
-                <Validation>
-                    <Field>
-                        <FieldLabel>First name:</FieldLabel>
-                        <TextEdit TValue="string" @bind-Text="@workerToAdd.FirstName" @bind-Text:after="OnWorkerModelChanged">
-                            <Feedback>
-                                <ValidationError />
-                            </Feedback>
-                        </TextEdit>
-                    </Field>
-                </Validation>
-                <Validation>
-                    <Field>
-                        <FieldLabel>Last name:</FieldLabel>
-                        <TextEdit TValue="string" @bind-Text="@workerToAdd.LastName" @bind-Text:after="OnWorkerModelChanged">
-                            <Feedback>
-                                <ValidationError />
-                            </Feedback>
-                        </TextEdit>
-                    </Field>
-                </Validation>
-            </Validations>
-            <Field>
-                <FieldLabel/>
-                <Button Color="Color.Primary" Disabled="@(!workersSuccess)" PreventDefaultOnSubmit>ADD</Button>
-            </Field>
-        </Fields>
-    </Column>
-</Row>
 
-<Row Flex="Flex.JustifyContent.Center">
-    <Column ColumnSize="ColumnSize.Is10">
-        <Row Position="Position.Relative">
-            <Column ColumnSize="ColumnSize.Is3">
-                <Heading Padding="Padding.Is3.FromBottom" Position="Position.Absolute.Bottom.Is0" Size="HeadingSize.Is4">Jobs</Heading>
-            </Column>
-            <Column ColumnSize="ColumnSize.Is3.WithOffset">
-                <Addons>
-                    <Addon AddonType="AddonType.Start">
-                        <AddonLabel><Icon Name="IconName.Search" /></AddonLabel>
-                    </Addon>
-                    <Addon AddonType="AddonType.Body">
-                        <TextEdit Placeholder="Search" Text="@jobsSearchString1" TextChanged="@OnJobsFilterValueChanged"></TextEdit>
-                    </Addon>
-                </Addons>
-            </Column>
-        </Row>
-        <DataGrid @ref="jobsGrid"
-            TItem="JobTableModel" Data="JobsElements" @bind-SelectedRow="@jobsSelectedItem1" ShowPager
-            ShowPageSizes
-            PagerPosition="DataGridPagerPosition.Bottom"
-            PagerOptions="new(){ ButtonSize=Size.Small }">
-             <DataGridColumns>
-                 <DataGridCommandColumn />
-                 <DataGridColumn Field="@nameof(JobTableModel.JobId)" Caption="Job Id" Sortable="false" />
-                 <DataGridColumn Field="@nameof(JobTableModel.JobTitle)" Caption="Job title" Sortable="false" />
-                 <DataGridColumn Field="@nameof(JobTableModel.DateAdded)" Caption="Date added" Sortable="false" />
-             </DataGridColumns>
-             <PageButtonTemplate>
-                 <Span TextColor="TextColor.Success">
-                     @context.PageNumber
-                 </Span>
-             </PageButtonTemplate>
-             <NextPageButtonTemplate><Icon Name="IconName.StepForward" TextColor="TextColor.Success" /></NextPageButtonTemplate>
-             <PreviousPageButtonTemplate><Icon Name="IconName.StepBackward" TextColor="TextColor.Success" /></PreviousPageButtonTemplate>
-             <LastPageButtonTemplate><Icon Name="IconName.Forward" TextColor="TextColor.Success" /></LastPageButtonTemplate>
-             <FirstPageButtonTemplate><Icon Name="IconName.Backward" TextColor="TextColor.Success" /></FirstPageButtonTemplate>
-             <TotalItemsTemplate><Badge Color="Color.Success">@context.TotalItems total items</Badge></TotalItemsTemplate>
-             <TotalItemsShortTemplate><Badge Color="Color.Success">@context.TotalItems</Badge></TotalItemsShortTemplate>
-             <ItemsPerPageTemplate></ItemsPerPageTemplate>
-             <PageSelectorTemplate>
-                 <Select TextColor="TextColor.Success" @bind-SelectedValue="@context.CurrentPage" Size="Size.Small">
-                     @for (int i = context.FirstVisiblePage; i <= context.LastVisiblePage; ++i)
-                    {
-                        var pageNumber = i;
-                        <SelectItem Value="@pageNumber">@pageNumber</SelectItem>
-                    }
-                </Select>
-            </PageSelectorTemplate>
-            <PageSizesTemplate>
-                <Select TextColor="TextColor.Success" @bind-SelectedValue="@context.CurrentPageSize" Size="Size.Small">
-                    @foreach (var curPageSize in context.PageSizes)
-                    {
-                        <SelectItem Value="@curPageSize">@curPageSize</SelectItem>
-                    }
-                </Select>
-            </PageSizesTemplate>
-        </DataGrid>
-    </Column>
-</Row>
-<Row Flex="Flex.JustifyContent.Center">
-    <Column ColumnSize="ColumnSize.Is6">
-        <Fields>
-            <Validations @ref="@jobsValidations" Mode="ValidationMode.Manual" Model="@buildingToAdd" HandlerType="typeof(FluentValidationHandler)">
-                <Validation>
-                    <Field>
-                        <FieldLabel>Job Title:</FieldLabel>
-                        <TextEdit TValue="string" @bind-Text="@jobToAdd.Title" @bind-Text:after="OnJobModelChanged">
-                            <Feedback>
-                                <ValidationError />
-                            </Feedback>
-                        </TextEdit>
-                    </Field>
-                </Validation>
-                <Field>
-                    <FieldLabel />
-                    <Button Color="Color.Primary" Disabled="@(!jobsSuccess)" PreventDefaultOnSubmit>ADD</Button>
-                </Field>
-            </Validations>
-        </Fields>
-    </Column>
-</Row>
 
-<Row Flex="Flex.JustifyContent.Center">
-    <Column ColumnSize="ColumnSize.Is10">
-        <Row Position="Position.Relative">
-            <Column ColumnSize="ColumnSize.Is3">
-                <Heading Padding="Padding.Is3.FromBottom" Position="Position.Absolute.Bottom.Is0" Size="HeadingSize.Is4">Buildings</Heading>
-            </Column>
-            <Column ColumnSize="ColumnSize.Is3.WithOffset">
-                <Addons>
-                    <Addon AddonType="AddonType.Start">
-                        <AddonLabel><Icon Name="IconName.Search" /></AddonLabel>
-                    </Addon>
-                    <Addon AddonType="AddonType.Body">
-                        <TextEdit Placeholder="Search" Text="@buildingsSearchString1" TextChanged="@OnBuildingsFilterValueChanged"></TextEdit>
-                    </Addon>
-                </Addons>
-            </Column>
-        </Row>
-        <DataGrid @ref="buildingsGrid"
-            TItem="BuildingTableModel" Data="BuildingsElements" @bind-SelectedRow="@buildingsSelectedItem1" ShowPager
-            ShowPageSizes
-            PagerPosition="DataGridPagerPosition.Bottom"
-            PagerOptions="new(){ ButtonSize=Size.Small }">
-             <DataGridColumns>
-                 <DataGridCommandColumn />
-                 <DataGridColumn Field="@nameof(BuildingTableModel.BuildingId)" Caption="Building Id" Sortable="false" />
-                 <DataGridColumn Field="@nameof(BuildingTableModel.BuildingTitle)" Caption="Building title" Sortable="false" />
-                 <DataGridColumn Field="@nameof(BuildingTableModel.DateAdded)" Caption="Date added" Sortable="false" />
-             </DataGridColumns>
-             <PageButtonTemplate>
-                 <Span TextColor="TextColor.Success">
-                     @context.PageNumber
-                 </Span>
-             </PageButtonTemplate>
-             <NextPageButtonTemplate><Icon Name="IconName.StepForward" TextColor="TextColor.Success" /></NextPageButtonTemplate>
-             <PreviousPageButtonTemplate><Icon Name="IconName.StepBackward" TextColor="TextColor.Success" /></PreviousPageButtonTemplate>
-             <LastPageButtonTemplate><Icon Name="IconName.Forward" TextColor="TextColor.Success" /></LastPageButtonTemplate>
-             <FirstPageButtonTemplate><Icon Name="IconName.Backward" TextColor="TextColor.Success" /></FirstPageButtonTemplate>
-             <TotalItemsTemplate><Badge Color="Color.Success">@context.TotalItems total items</Badge></TotalItemsTemplate>
-             <TotalItemsShortTemplate><Badge Color="Color.Success">@context.TotalItems</Badge></TotalItemsShortTemplate>
-             <ItemsPerPageTemplate></ItemsPerPageTemplate>
-             <PageSelectorTemplate>
-                 <Select TextColor="TextColor.Success" @bind-SelectedValue="@context.CurrentPage" Size="Size.Small">
-                     @for (int i = context.FirstVisiblePage; i <= context.LastVisiblePage; ++i)
-                    {
-                        var pageNumber = i;
-                        <SelectItem Value="@pageNumber">@pageNumber</SelectItem>
-                    }
-                </Select>
-            </PageSelectorTemplate>
-            <PageSizesTemplate>
-                <Select TextColor="TextColor.Success" @bind-SelectedValue="@context.CurrentPageSize" Size="Size.Small">
-                    @foreach (var curPageSize in context.PageSizes)
-                    {
-                        <SelectItem Value="@curPageSize">@curPageSize</SelectItem>
-                    }
-                </Select>
-            </PageSizesTemplate>
-        </DataGrid>
-    </Column>
-</Row>
-<Row Flex="Flex.JustifyContent.Center" Padding="Padding.Is5.FromBottom">
-    <Column ColumnSize="ColumnSize.Is6">
-        <Fields>
-            <Validations @ref="@buildingsValidations" Mode="ValidationMode.Manual" Model="@buildingToAdd" HandlerType="typeof(FluentValidationHandler)">
-                <Validation>
-                    <Field>
-                        <FieldLabel>Building Title:</FieldLabel>
-                        <TextEdit TValue="string" @bind-Text="@buildingToAdd.Title" @bind-Text:after="OnBuildingModelChanged">
-                            <Feedback>
-                                <ValidationError/>
-                            </Feedback>
-                        </TextEdit>
-                    </Field>
-                </Validation>
-                <Field>
-                    <FieldLabel />
-                    <Button Color="Color.Primary" Disabled="@(!buildingsSuccess)" PreventDefaultOnSubmit>ADD</Button>
-                </Field>
-            </Validations>
-        </Fields>
-    </Column>
-</Row>
+<ManageAssetGrid GItem="WorkerTableModel" Title="Workers" Elements="WorkersElements" FilterFunc="@WorkersFilterFunc" GridColumnSize="ColumnSize.Is10">
+    <AssetGridColumns>
+        <GridColumn TGItem="WorkerTableModel" Title="Worker Id" Sortable=false Field=@nameof(WorkerTableModel.WorkerId) />
+        <GridColumn TGItem="WorkerTableModel" Title="Worker name" Sortable=false Field=@nameof(WorkerTableModel.WorkerName) />
+        <GridColumn TGItem="WorkerTableModel" Title="Worker access code" Sortable=false Field=@nameof(WorkerTableModel.WorkerAccessCode) />
+        <GridColumn TGItem="WorkerTableModel" Title="Date added" Sortable=false Field=@nameof(WorkerTableModel.DateAdded) />
+    </AssetGridColumns>
+</ManageAssetGrid>
+<ManageAssetForm GItem="WorkerTableModel" FItem="WorkerAddModel" ButtonLabel="ADD" FormColumnSize="ColumnSize.Is6">
+    <AssetFormFields>
+        <FormField TGItem="WorkerTableModel" TFItem="WorkerAddModel" Label="First name:" Validate=true Field=@nameof(WorkerAddModel.FirstName) />
+        <FormField TGItem="WorkerTableModel" TFItem="WorkerAddModel" Label="Last name:" Validate=true Field=@nameof(WorkerAddModel.LastName) />
+    </AssetFormFields>
+</ManageAssetForm>
+
+<ManageAssetGrid GItem="JobTableModel" Title="Jobs" Elements="JobsElements" FilterFunc="@JobsFilterFunc" GridColumnSize="ColumnSize.Is10">
+    <AssetGridColumns>
+        <GridColumn TGItem="JobTableModel" Title="Job Id" Sortable=false Field=@nameof(JobTableModel.JobId) />
+        <GridColumn TGItem="JobTableModel" Title="Job title" Sortable=false Field=@nameof(JobTableModel.JobTitle) />
+        <GridColumn TGItem="JobTableModel" Title="Date added" Sortable=false Field=@nameof(JobTableModel.DateAdded) />
+    </AssetGridColumns>
+</ManageAssetGrid>
+<ManageAssetForm GItem="JobTableModel" FItem="JobAddModel" ButtonLabel="ADD" FormColumnSize="ColumnSize.Is6">
+    <AssetFormFields>
+        <FormField TGItem="JobTableModel" TFItem="JobAddModel" Label="Job Title:" Validate=true Field=@nameof(JobAddModel.Title) />
+    </AssetFormFields>
+</ManageAssetForm>
+
+<ManageAssetGrid GItem="BuildingTableModel" Title="Jobs" Elements="BuildingsElements" FilterFunc="@BuildingsFilterFunc" GridColumnSize="ColumnSize.Is10">
+    <AssetGridColumns>
+        <GridColumn TGItem="BuildingTableModel" Title="Job Id" Sortable=false Field=@nameof(BuildingTableModel.BuildingId) />
+        <GridColumn TGItem="BuildingTableModel" Title="Job title" Sortable=false Field=@nameof(BuildingTableModel.BuildingTitle) />
+        <GridColumn TGItem="BuildingTableModel" Title="Date added" Sortable=false Field=@nameof(BuildingTableModel.DateAdded) />
+    </AssetGridColumns>
+</ManageAssetGrid>
+<ManageAssetForm GItem="BuildingTableModel" FItem="BuildingAddModel" ButtonLabel="ADD" FormColumnSize="ColumnSize.Is6" FormPadding="Padding.Is5.FromBottom">
+    <AssetFormFields>
+        <FormField TGItem="BuildingTableModel" TFItem="BuildingAddModel" Label="Building Title:" Validate=true Field=@nameof(BuildingAddModel.Title) />
+    </AssetFormFields>
+</ManageAssetForm>
+
 @code {
-    private DataGrid<WorkerTableModel> workersGrid;
-    private string workersSearchString1 = "";
-
-    private Task OnWorkersFilterValueChanged(string e)
-    {
-        workersSearchString1 = e;
-        return workersGrid.Reload();
-    }
-
-    private bool WorkersFilterFunc1(WorkerTableModel element) => WorkersFilterFunc(element, workersSearchString1);
-
     private bool WorkersFilterFunc(WorkerTableModel element, string searchString)
     {
         if (string.IsNullOrWhiteSpace(searchString))
@@ -289,98 +62,33 @@
         return false;
     }
 
-    private WorkerTableModel workersSelectedItem1 = null;
-    private HashSet<WorkerTableModel> workersSelectedItems = new HashSet<WorkerTableModel>();
+    private bool JobsFilterFunc(JobTableModel element, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (element.JobId.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.JobTitle.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
+    }
 
+    private bool BuildingsFilterFunc(BuildingTableModel element, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (element.BuildingId.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.BuildingTitle.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
+    }
+    
     private IEnumerable<WorkerTableModel> WorkersElements = new List<WorkerTableModel>();
-
-    bool workersSuccess;
-
-    Validations workersValidations;
-
-    WorkerAddModel workerToAdd = new();
-
-    private async Task OnWorkerModelChanged()
-    {
-        if (await workersValidations.ValidateAll())
-        {
-            workersSuccess = true;
-        }
-    }
-    protected async Task OnAddWorker()
-    {
-        if (await workersValidations.ValidateAll())
-        {
-            // the person is validated and we can proceed with the saving process
-        }
-    }
-
-    private DataGrid<JobTableModel> jobsGrid;
-    private string jobsSearchString1 = "";
-    private Task OnJobsFilterValueChanged(string e)
-    {
-        jobsSearchString1 = e;
-        return jobsGrid.Reload();
-    }
-
-    private JobTableModel jobsSelectedItem1 = null;
-    private HashSet<JobTableModel> jobsSelectedItems = new HashSet<JobTableModel>();
 
     private IEnumerable<JobTableModel> JobsElements = new List<JobTableModel>();
 
-    bool jobsSuccess;
-
-    Validations jobsValidations;
-
-    JobAddModel jobToAdd = new();
-
-    private async Task OnJobModelChanged()
-    {
-        if (await jobsValidations.ValidateAll())
-        {
-            jobsSuccess = true;
-        }
-    }
-    protected async Task OnAddJob()
-    {
-        if (await jobsValidations.ValidateAll())
-        {
-            // the person is validated and we can proceed with the saving process
-        }
-    }
-
-    private DataGrid<BuildingTableModel> buildingsGrid;
-    private string buildingsSearchString1 = "";
-    private Task OnBuildingsFilterValueChanged(string e)
-    {
-        buildingsSearchString1 = e;
-        return buildingsGrid.Reload();
-    }
-    private BuildingTableModel buildingsSelectedItem1 = null;
-    private HashSet<BuildingTableModel> buildingsSelectedItems = new HashSet<BuildingTableModel>();
-
     private IEnumerable<BuildingTableModel> BuildingsElements = new List<BuildingTableModel>();
-
-    bool buildingsSuccess;
-
-    Validations buildingsValidations;
-
-    BuildingAddModel buildingToAdd = new();
-
-    private async Task OnBuildingModelChanged()
-    {
-        if (await buildingsValidations.ValidateAll())
-        {
-            buildingsSuccess = true;
-        }
-    }
-    protected async Task OnAddBuilding()
-    {
-        if (await buildingsValidations.ValidateAll())
-        {
-            // the person is validated and we can proceed with the saving process
-        }
-    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -423,32 +131,7 @@
             new BuildingTableModel() { BuildingId = "4", BuildingTitle = "Building Four", DateAdded = "01.04.2023" },
             new BuildingTableModel() { BuildingId = "5", BuildingTitle = "Building Five", DateAdded = "01.05.2023" },
         };
+        StateHasChanged();
     }
-
-    private bool JobsFilterFunc1(JobTableModel element) => JobsFilterFunc(element, jobsSearchString1);
-
-    private bool JobsFilterFunc(JobTableModel element, string searchString)
-    {
-        if (string.IsNullOrWhiteSpace(searchString))
-            return true;
-        if (element.JobId.Contains(searchString, StringComparison.OrdinalIgnoreCase))
-            return true;
-        if (element.JobTitle.Contains(searchString, StringComparison.OrdinalIgnoreCase))
-            return true;
-        return false;
-    }
-
-    private bool BuildingsFilterFunc1(BuildingTableModel element) => BuildingsFilterFunc(element, buildingsSearchString1);
-
-    private bool BuildingsFilterFunc(BuildingTableModel element, string searchString)
-    {
-        if (string.IsNullOrWhiteSpace(searchString))
-            return true;
-        if (element.BuildingId.Contains(searchString, StringComparison.OrdinalIgnoreCase))
-            return true;
-        if (element.BuildingTitle.Contains(searchString, StringComparison.OrdinalIgnoreCase))
-            return true;
-        return false;
-    }
-
+   
 }
