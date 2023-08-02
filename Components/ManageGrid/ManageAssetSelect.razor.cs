@@ -19,6 +19,11 @@ public partial class ManageAssetSelect<TItem, CItem> : ComponentBase
     public CItem CurrentValue { get; set; } = default;
     [Parameter]
     public EventCallback<CItem> CurrentValueChanged { get; set; }
+    void ValidateValue(ValidatorEventArgs e)
+    {
+        bool deafultSelection = CurrentValue.Equals(DefaultValue);
+        e.Status = deafultSelection==false ? ValidationStatus.Success : ValidationStatus.Error;
+    }
     public void OnChangedAfter()
     {
         CItem value = CurrentValue;
