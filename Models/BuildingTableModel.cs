@@ -1,14 +1,18 @@
-﻿namespace EmployeeManagementApp.Models;
+﻿using EmployeeManagementApp.Components.ManageGrid;
 
-public class BuildingTableModel
+namespace EmployeeManagementApp.Models;
+
+public class BuildingTableModel : IAssetSelectItem<int>
 {
-    public string BuildingId { get; set; }
+    public int Id => BuildingId;
+    public string Name => BuildingTitle;
+    public int BuildingId { get; set; }
     public string BuildingTitle { get; set; }
     public string DateAdded { get; set; }
 
     public BuildingTableModel()
     {
-        BuildingId = string.Empty;
+        BuildingId = 0;
         BuildingTitle = string.Empty;
         DateAdded = string.Empty;
     }

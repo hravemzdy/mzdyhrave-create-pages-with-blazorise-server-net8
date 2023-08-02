@@ -1,9 +1,10 @@
-﻿using FluentValidation;
+﻿using EmployeeManagementApp.Components.ManageGrid;
+using FluentValidation;
 using System;
 
 namespace EmployeeManagementApp.Models;
 
-public class WorkerAddModel
+public class WorkerAddModel : IAddTableModel<WorkerTableModel, WorkerAddModel>
 {
     public string FirstName { get; set; }
     public string LastName { get; set; }
@@ -12,6 +13,23 @@ public class WorkerAddModel
     {
         FirstName = string.Empty;
         LastName = string.Empty;
+    }
+
+    public void Clear()
+    {
+        FirstName = string.Empty;
+        LastName = string.Empty;
+    }
+    public WorkerTableModel CreateTableModel()
+    {
+        return new WorkerTableModel()
+        {
+            WorkerId = 100,
+            WorkerFirstName = FirstName,
+            WorkerLastName = LastName,
+            WorkerAccessCode = "X",
+            DateAdded = "Now"
+        };
     }
 }
 

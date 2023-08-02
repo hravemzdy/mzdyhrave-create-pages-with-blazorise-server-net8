@@ -1,0 +1,77 @@
+﻿@page "/manage-assignments"
+
+@using EmployeeManagementApp.Components.ManageGrid
+@using EmployeeManagementApp.Extensions;
+@using EmployeeManagementApp.Models;
+<!-- Grid -->
+<!-- GridItem, PaperContainer, Form (Grid, GridItem (TextField), Grid, GridItem (Button)) -->
+<!-- Worker, Job, Building, ADD ASSIGNMENT -->
+<Row Flex="Flex.JustifyContent.Center">
+    <Column ColumnSize="ColumnSize.Is10">
+        <Fields>
+            <ManageAssetSelect TItem="WorkerTableModel" CItem="int" Elements="WorkersElements" SelectLabel="Worker" SelectedLabel="Selected Worker:"
+                               CurrentValue="@WorkerValue" DefaultValue="0" CurrentValueChanged="WorkerValueChanged" />
+            <ManageAssetSelect TItem="JobTableModel" CItem="int" Elements="JobsElements" SelectLabel="Job" SelectedLabel="Selected Job:"
+                               CurrentValue="@JobValue" DefaultValue="0" CurrentValueChanged="JobValueChanged" />
+            <ManageAssetSelect TItem="BuildingTableModel" CItem="int" Elements="BuildingsElements" SelectLabel="Building" SelectedLabel="Selected Building:"
+                               CurrentValue="@BuildingValue" DefaultValue="0" CurrentValueChanged="BuildingValueChanged" />
+        </Fields>
+    </Column>
+</Row>
+
+<Row>
+    <Column ColumnSize="ColumnSize.Is4.Is4.WithOffset">
+        <Fields Flex="Flex.JustifyContent.Center" >
+            <Button Color="Color.Primary" Disabled="@(!assignmentsSuccess)" PreventDefaultOnSubmit>ADD ASSIGNMENT</Button>
+        </Fields>
+    </Column>
+</Row>
+
+@code {
+    private int WorkerValue { get; set; }
+    private int JobValue { get; set; }
+    private int BuildingValue { get; set; } 
+
+    bool assignmentsSuccess = false;
+    string[] assignmentsErrors = { };
+
+    private IEnumerable<WorkerTableModel> WorkersElements = new List<WorkerTableModel>();
+
+    private IEnumerable<JobTableModel> JobsElements = new List<JobTableModel>();
+
+    private IEnumerable<BuildingTableModel> BuildingsElements = new List<BuildingTableModel>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        assignmentsSuccess = false;
+
+        WorkersElements = new List<WorkerTableModel>().TestCollection();
+        WorkerValue = WorkersElements.Select(x => x.Id).DefaultIfEmpty(0).FirstOrDefault();
+        JobsElements = new List<JobTableModel>().TestCollection();
+        JobValue = JobsElements.Select(x => x.Id).DefaultIfEmpty(0).FirstOrDefault();
+        BuildingsElements = new List<BuildingTableModel>().TestCollection();
+        BuildingValue = BuildingsElements.Select(x => x.Id).DefaultIfEmpty(0).FirstOrDefault();
+    }
+    private void WorkerValueChanged(int val)
+    {
+        WorkerValue = val;
+        assignmentsSuccess = NotEmptySelection();
+        StateHasChanged();
+    }
+    private void JobValueChanged(int val)
+    {
+        JobValue = val;
+        assignmentsSuccess = NotEmptySelection();
+        StateHasChanged();
+    }
+    private void BuildingValueChanged(int val)
+    {
+        BuildingValue = val;
+        assignmentsSuccess = NotEmptySelection();
+        StateHasChanged();
+    }
+    private bool NotEmptySelection()
+    {
+       return (WorkerValue != 0 && JobValue != 0 && BuildingValue != 0);    
+    }
+}

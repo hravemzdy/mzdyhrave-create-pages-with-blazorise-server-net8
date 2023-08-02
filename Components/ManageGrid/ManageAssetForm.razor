@@ -8,46 +8,42 @@
     <Row Flex="Flex.JustifyContent.Center" Padding="FormPadding">
         <Column ColumnSize="FormColumnSize">
             <Fields>
-                <Validations @ref="formValidations" Mode="ValidationMode.Manual" Model="itemToAdd" HandlerType="typeof(FluentValidationHandler)">
-                    @foreach (FormField<GItem, FItem> field in Fields)
+                @foreach (FormField<GItem, FItem> field in Fields)
+                {
+                    @if (field.Template == null)
                     {
-                        string? value = itemToAdd.GetType().GetProperty(field.Field)?.GetValue(itemToAdd) as string;
-                        @if (value is not null)
+                        @if (field.Validate)
                         {
-                            @if (field.Template == null)
-                            {
-                                @if (field.Validate)
-                                {
-                                    <Validation>
-                                        <Field>
-                                            <FieldLabel>@field.Label</FieldLabel>
-                                            <TextEdit TValue="string" @bind-Text="@value" @bind-Text:after="OnModelChanged">
-                                                <Feedback>
-                                                    <ValidationError />
-                                                </Feedback>
-                                            </TextEdit>
-                                        </Field>
-                                    </Validation>
-                                }
-                                else
-                                {
-                                    <Field>
-                                        <FieldLabel>@field.Label</FieldLabel>
-                                        <TextEdit TValue="string" @bind-Text="@value" @bind-Text:after="OnModelChanged">
-                                        </TextEdit>
-                                    </Field>
-                                }
-                            }
-                            else
-                            {
-                                @field.Template(value)
-                            }
+                            <Validation Validator="ValidationRule.IsNotEmpty">
+                                <Field>
+                                    <FieldLabel>@field.Label</FieldLabel>
+                                    <TextEdit TValue="string" Text="@field.CurrentValue" TextChanged="@field.FormValueChanged">
+                                        <Feedback>
+                                            <ValidationNone>@field.FeedbackNone</ValidationNone>
+                                            <ValidationSuccess>@field.FeedbackGood</ValidationSuccess>
+                                            <ValidationError>@field.FeedbackError</ValidationError>
+                                        </Feedback>
+                                    </TextEdit>
+                                </Field>
+                            </Validation>
+                        }
+                        else
+                        {
+                            <Field>
+                                <FieldLabel>@field.Label</FieldLabel>
+                                <TextEdit TValue="string" Text="@field.CurrentValue" TextChanged="@field.FormValueChanged">
+                                </TextEdit>
+                            </Field>
                         }
                     }
-                </Validations>
+                    else
+                    {
+                        @field.Template(field.CurrentValue)
+                    }
+                }
                 <Field>
                     <FieldLabel />
-                    <Button Color="Color.Primary" Disabled="@(!formSuccess)" PreventDefaultOnSubmit>@ButtonLabel</Button>
+                    <Button Color="Color.Primary" Disabled="@(!formSuccess)" Clicked="@OnAddItem" PreventDefaultOnSubmit>@ButtonLabel</Button>
                 </Field>
             </Fields>
         </Column>

@@ -1,16 +1,25 @@
-﻿namespace EmployeeManagementApp.Models;
+﻿using EmployeeManagementApp.Components.ManageGrid;
 
-public class WorkerTableModel
+namespace EmployeeManagementApp.Models;
+
+public class WorkerTableModel : IAssetSelectItem<int>
 {
-    public string WorkerId { get; set; }
-    public string WorkerName { get; set; }
+    public int Id => WorkerId;
+    public string Name => WorkerName;
+
+    public int WorkerId { get; set; }
+    public string WorkerName { get => string.Join(" ", WorkerLastName, WorkerFirstName); }
+    public string WorkerFirstName { get; set; }
+    public string WorkerLastName { get; set; }
     public string WorkerAccessCode { get; set; }
     public string DateAdded { get; set; }
 
+
     public WorkerTableModel()
     {
-        WorkerId = string.Empty;
-        WorkerName = string.Empty;
+        WorkerId = 0;
+        WorkerFirstName = string.Empty;
+        WorkerLastName = string.Empty;
         WorkerAccessCode = string.Empty;
         DateAdded = string.Empty;
     }

@@ -1,16 +1,19 @@
-﻿using FluentValidation;
+﻿using EmployeeManagementApp.Components.ManageGrid;
+using FluentValidation;
 
 namespace EmployeeManagementApp.Models;
 
-public class JobTableModel
+public class JobTableModel : IAssetSelectItem<int>
 {
-    public string JobId { get; set; }
+    public int Id => JobId;
+    public string Name => JobTitle;
+    public int JobId { get; set; }
     public string JobTitle { get; set; }
     public string DateAdded { get; set; }
 
     public JobTableModel()
     {
-        JobId = string.Empty;
+        JobId = 0;
         JobTitle = string.Empty;
         DateAdded = string.Empty;
     }

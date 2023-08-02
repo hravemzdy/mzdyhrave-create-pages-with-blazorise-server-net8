@@ -1,0 +1,21 @@
+﻿@typeparam TItem
+@typeparam CItem
+@inherits ComponentBase
+
+@namespace EmployeeManagementApp.Components.ManageGrid
+
+<CascadingValue Value="@this" IsFixed>
+    <Field>
+        <FieldLabel>@SelectLabel</FieldLabel>
+        <Select TValue="CItem" SelectedValue="@CurrentValue" SelectedValueChanged="@CurrentValueChanged">
+            @foreach (var item in Elements)
+            {
+                <SelectItem Value="@item.Id">@item.Name</SelectItem>
+            }
+        </Select>
+        <Divider />
+        <FieldLabel>@SelectedLabel</FieldLabel>
+        <TextEdit TextColor="@CurrentColor" Plaintext ReadOnly Text="@CurrentName" />
+    </Field>
+</CascadingValue>
+
