@@ -1,4 +1,4 @@
-﻿using EmployeeManagementApp.Components.ManageGrid;
+﻿using EmployeeManagementApp.Models.Interfaces;
 using FluentValidation;
 
 namespace EmployeeManagementApp.Models;
@@ -6,6 +6,7 @@ namespace EmployeeManagementApp.Models;
 public class JobTableModel : IAssetSelectItem<int>
 {
     public int Id => JobId;
+    public string TableId => JobId.ToString();
     public string Name => JobTitle;
     public int JobId { get; set; }
     public string JobTitle { get; set; }

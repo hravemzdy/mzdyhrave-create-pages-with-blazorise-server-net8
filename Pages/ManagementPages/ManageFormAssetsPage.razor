@@ -3,66 +3,54 @@
 @using Blazorise.DataGrid
 @using EmployeeManagementApp.Components
 @using EmployeeManagementApp.Components.ManageGrid
+@using EmployeeManagementApp.Components.ManageForm
 @using EmployeeManagementApp.Extensions;
 @using EmployeeManagementApp.Models;
 
-<ManageAssetGrid GItem="WorkerTableModel" Title="Workers" Elements="WorkersElements" FilterFunc="@WorkersFilterFunc" GridColumnSize="ColumnSize.Is10">
-    <AssetGridColumns>
-        <GridColumn TGItem="WorkerTableModel" Title="Worker Id" Sortable=false Field=@nameof(WorkerTableModel.WorkerId) />
-        <GridColumn TGItem="WorkerTableModel" Title="Worker name" Sortable=false Field=@nameof(WorkerTableModel.WorkerName) />
-        <GridColumn TGItem="WorkerTableModel" Title="Worker access code" Sortable=false Field=@nameof(WorkerTableModel.WorkerAccessCode) />
-        <GridColumn TGItem="WorkerTableModel" Title="Date added" Sortable=false Field=@nameof(WorkerTableModel.DateAdded) />
-    </AssetGridColumns>
-</ManageAssetGrid>
-<ManageAssetForm @ref="workerForm" GItem="WorkerTableModel" FItem="WorkerAddModel" ButtonLabel="ADD" FormColumnSize="ColumnSize.Is6"
-                 OnItemAdd="@OnWorkerAdded">
-    <AssetFormFields>
-        <FormField TGItem="WorkerTableModel" TFItem="WorkerAddModel" Label="First name:" Validate=true 
-                   FeedbackNone="" FeedbackGood="" FeedbackError="First name is not valid"
-                   GetModelValue="@((m) => {return m.FirstName;})" SetModelValue="@((m, val) => {m.FirstName = val; return true;})" />
-        <FormField TGItem="WorkerTableModel" TFItem="WorkerAddModel" Label="Last name:" Validate=true 
-                   FeedbackNone="" FeedbackGood="" FeedbackError="last name is not valid"
-                   GetModelValue="@((m) => {return m.LastName;})" SetModelValue="@((m, val) => {m.LastName = val; return true;})" />
-    </AssetFormFields>
-</ManageAssetForm>
+<AssetGrid GItem="WorkerTableModel" Title="Workers" Elements="WorkersElements" FilterFunc="@WorkersFilterFunc" GridColumnSize="ColumnSize.Is10">
+    <AssetGridColumn Caption="Worker Id" Sortable=false Field=@nameof(WorkerTableModel.TableId) />
+    <AssetGridColumn Caption="Worker name" Sortable=false Field=@nameof(WorkerTableModel.WorkerName) />
+    <AssetGridColumn Caption="Worker access code" Sortable=false Field=@nameof(WorkerTableModel.WorkerAccessCode) />
+    <AssetGridColumn Caption="Date added" Sortable=false Field=@nameof(WorkerTableModel.DateAdded) />
+</AssetGrid>
+<AssetForm FItem="WorkerAddModel" FormPadding="Padding.Is3">
+    <AssetFormBlock FItem="WorkerAddModel" ButtonLabel="ADD" FormColumnSize="ColumnSize.Is6" OnItemAdd="@OnWorkerAdded">
+        <AssetFormBlockField FItem="WorkerAddModel" Label="First name:" 
+                             Validate=true FeedbackNone="" FeedbackGood="" FeedbackError="First name is required!"
+                             ModelExpression="@((m) => m.FirstName)" />
+        <AssetFormBlockField FItem="WorkerAddModel" Label="Last name:"
+                             Validate=true FeedbackNone="" FeedbackGood="" FeedbackError="Last name is required!"
+                             ModelExpression="@((m) => m.LastName)" />
+    </AssetFormBlock>
+</AssetForm>
 
-<ManageAssetGrid GItem="JobTableModel" Title="Jobs" Elements="JobsElements" FilterFunc="@JobsFilterFunc" GridColumnSize="ColumnSize.Is10">
-    <AssetGridColumns>
-        <GridColumn TGItem="JobTableModel" Title="Job Id" Sortable=false Field=@nameof(JobTableModel.JobId) />
-        <GridColumn TGItem="JobTableModel" Title="Job title" Sortable=false Field=@nameof(JobTableModel.JobTitle) />
-        <GridColumn TGItem="JobTableModel" Title="Date added" Sortable=false Field=@nameof(JobTableModel.DateAdded) />
-    </AssetGridColumns>
-</ManageAssetGrid>
-<ManageAssetForm @ref="jobForm" GItem="JobTableModel" FItem="JobAddModel" ButtonLabel="ADD" FormColumnSize="ColumnSize.Is6"
-    OnItemAdd="@OnJobAdded">
-    <AssetFormFields>
-        <FormField TGItem="JobTableModel" TFItem="JobAddModel" Label="Job Title:" Validate=true
-                   FeedbackNone="" FeedbackGood="" FeedbackError="Title is not valid"
-                   GetModelValue="@((m) => {return m.Title;})" SetModelValue="@((m, val) => {m.Title = val; return true;})" />
-    </AssetFormFields>
-</ManageAssetForm>
+<AssetGrid GItem="JobTableModel" Title="Jobs" Elements="JobsElements" FilterFunc="@JobsFilterFunc" GridColumnSize="ColumnSize.Is10">
+    <AssetGridColumn Caption="Job Id" Sortable=false Field=@nameof(JobTableModel.TableId) />
+    <AssetGridColumn Caption="Job title" Sortable=false Field=@nameof(JobTableModel.JobTitle) />
+    <AssetGridColumn Caption="Date added" Sortable=false Field=@nameof(JobTableModel.DateAdded) />
+</AssetGrid>
+<AssetForm FItem="JobAddModel" FormPadding="Padding.Is3">
+    <AssetFormBlock FItem="JobAddModel" ButtonLabel="ADD" FormColumnSize="ColumnSize.Is6" OnItemAdd="@OnJobAdded">
+        <AssetFormBlockField FItem="JobAddModel" Label="Job title:"
+                             Validate=true FeedbackNone="" FeedbackGood="" FeedbackError="Job's title is required!"
+                             ModelExpression="@((m) => m.Title)" />
+    </AssetFormBlock>
+</AssetForm>
 
-<ManageAssetGrid GItem="BuildingTableModel" Title="Jobs" Elements="BuildingsElements" FilterFunc="@BuildingsFilterFunc" GridColumnSize="ColumnSize.Is10">
-    <AssetGridColumns>
-        <GridColumn TGItem="BuildingTableModel" Title="Job Id" Sortable=false Field=@nameof(BuildingTableModel.BuildingId) />
-        <GridColumn TGItem="BuildingTableModel" Title="Job title" Sortable=false Field=@nameof(BuildingTableModel.BuildingTitle) />
-        <GridColumn TGItem="BuildingTableModel" Title="Date added" Sortable=false Field=@nameof(BuildingTableModel.DateAdded) />
-    </AssetGridColumns>
-</ManageAssetGrid>
-<ManageAssetForm @ref="buildingForm" GItem="BuildingTableModel" FItem="BuildingAddModel" ButtonLabel="ADD" FormColumnSize="ColumnSize.Is6" FormPadding="Padding.Is5.FromBottom"
-                 OnItemAdd="@OnBuildingAdded">
-    <AssetFormFields>
-        <FormField TGItem="BuildingTableModel" TFItem="BuildingAddModel" Label="Building Title:" Validate=true
-                   FeedbackNone="" FeedbackGood="" FeedbackError="Title is not valid"
-                   GetModelValue="@((m) => {return m.Title;})" SetModelValue="@((m, val) => {m.Title = val; return true;})" />
-    </AssetFormFields>
-</ManageAssetForm>
+<AssetGrid GItem="BuildingTableModel" Title="Buildings" Elements="BuildingsElements" FilterFunc="@BuildingsFilterFunc" GridColumnSize="ColumnSize.Is10">
+    <AssetGridColumn Caption="Building Id" Sortable=false Field=@nameof(BuildingTableModel.TableId) />
+    <AssetGridColumn Caption="Building title" Sortable=false Field=@nameof(BuildingTableModel.BuildingTitle) />
+    <AssetGridColumn Caption="Date added" Sortable=false Field=@nameof(BuildingTableModel.DateAdded) />
+</AssetGrid>
+<AssetForm FItem="BuildingAddModel" FormPadding="Padding.Is3">
+    <AssetFormBlock FItem="BuildingAddModel" ButtonLabel="ADD" FormColumnSize="ColumnSize.Is6" OnItemAdd="@OnBuildingAdded">
+        <AssetFormBlockField FItem="BuildingAddModel" Label="Building title:"
+                             Validate=true FeedbackNone="" FeedbackGood="" FeedbackError="Building's title is required!"
+                             ModelExpression="@((m) => m.Title)" />
+    </AssetFormBlock>
+</AssetForm>
 
 @code {
-    private ManageAssetForm<WorkerTableModel, WorkerAddModel> workerForm;
-    private ManageAssetForm<JobTableModel, JobAddModel> jobForm;
-    private ManageAssetForm<BuildingTableModel, BuildingAddModel> buildingForm;
-
     private bool WorkersFilterFunc(WorkerTableModel element, string searchString)
     {
         if (string.IsNullOrWhiteSpace(searchString))
@@ -109,7 +97,6 @@
         WorkerTableModel item = itemToAdd.CreateTableModel();
         WorkersElements.Add(item);
 
-        workerForm.ClearAddFields();
         StateHasChanged();
     }
     private void OnJobAdded(JobAddModel itemToAdd)
@@ -117,7 +104,6 @@
         JobTableModel item = itemToAdd.CreateTableModel();
         JobsElements.Add(item);
 
-        jobForm.ClearAddFields();
         StateHasChanged();
     }
     private void OnBuildingAdded(BuildingAddModel itemToAdd)
@@ -125,7 +111,6 @@
         BuildingTableModel item = itemToAdd.CreateTableModel();
         BuildingsElements.Add(item);
 
-        buildingForm.ClearAddFields();
         StateHasChanged();
     }
 }

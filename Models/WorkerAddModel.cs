@@ -1,10 +1,10 @@
-﻿using EmployeeManagementApp.Components.ManageGrid;
+﻿using EmployeeManagementApp.Models.Interfaces;
 using FluentValidation;
 using System;
 
 namespace EmployeeManagementApp.Models;
 
-public class WorkerAddModel : IAddTableModel<WorkerTableModel, WorkerAddModel>
+public class WorkerAddModel : IClearableModel, IAddTableModel<WorkerTableModel, WorkerAddModel>
 {
     public string FirstName { get; set; }
     public string LastName { get; set; }

@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using EmployeeManagementApp.Models.Interfaces;
+using Microsoft.AspNetCore.Components;
 
 namespace EmployeeManagementApp.Components.ManageGrid;
 
 [CascadingTypeParameter(nameof(TItem))]
 [CascadingTypeParameter(nameof(CItem))]
-public partial class ManageAssetSelect<TItem, CItem> : ComponentBase
+public partial class AssetSelect<TItem, CItem> : ComponentBase
     where TItem : IAssetSelectItem<CItem>
 {
     [Parameter]

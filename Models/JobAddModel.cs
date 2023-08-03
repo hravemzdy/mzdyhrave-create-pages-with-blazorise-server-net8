@@ -1,9 +1,9 @@
-﻿using EmployeeManagementApp.Components.ManageGrid;
+﻿using EmployeeManagementApp.Models.Interfaces;
 using FluentValidation;
 
 namespace EmployeeManagementApp.Models;
 
-public class JobAddModel : IAddTableModel<JobTableModel, JobAddModel>
+public class JobAddModel : IClearableModel, IAddTableModel<JobTableModel, JobAddModel>
 {
     public string Title { get; set; }
 

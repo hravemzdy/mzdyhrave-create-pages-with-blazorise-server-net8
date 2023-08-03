@@ -1,0 +1,14 @@
+﻿@attribute [CascadingTypeParameter(nameof(FItem))]
+@typeparam FItem
+@inherits ComponentBase
+
+@namespace EmployeeManagementApp.Components.ManageForm
+
+<CascadingValue Value="this">
+    <CascadingValue Value="this.ModelToAdd">
+        <Row Flex="Flex.JustifyContent.Center" Padding="FormPadding">
+            @ChildContent
+        </Row>
+    </CascadingValue>
+</CascadingValue>
+

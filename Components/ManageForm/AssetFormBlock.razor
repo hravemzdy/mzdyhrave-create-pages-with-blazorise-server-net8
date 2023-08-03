@@ -1,0 +1,19 @@
+﻿@typeparam FItem
+@inherits ComponentBase
+
+@using FluentValidation;
+@using FluentValidation.Results;
+
+@namespace EmployeeManagementApp.Components.ManageForm
+
+<CascadingValue Value="this">
+    <Column ColumnSize="FormColumnSize">
+        <Fields>
+            @ChildContent
+            <Field>
+                <FieldLabel />
+                <Button Color="Color.Primary" Disabled="@(!formSuccess)" Clicked="@OnAddItem" PreventDefaultOnSubmit>@ButtonLabel</Button>
+            </Field>
+        </Fields>
+    </Column>
+</CascadingValue>

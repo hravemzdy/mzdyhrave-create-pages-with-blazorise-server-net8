@@ -1,40 +1,29 @@
-﻿@typeparam GItem
+﻿@attribute [CascadingTypeParameter(nameof(GItem))]
+@typeparam GItem
 @inherits ComponentBase
 
 @using Blazorise.DataGrid
 
-@namespace EmployeeManagementApp.Components.ManageGrid
-<CascadingValue Value="@this" IsFixed>
+@namespace EmployeeManagementApp.Components.ManageForm
+
+<CascadingValue Value="this">
     <Row Flex="Flex.JustifyContent.Center">
         <Column ColumnSize="GridColumnSize">
-            <Row Position="Position.Relative">
-                <Column ColumnSize="ColumnSize.Is3">
-                    <Heading Padding="Padding.Is3.FromBottom" Position="Position.Absolute.Bottom.Is0" Size="HeadingSize.Is4">@Title</Heading>
-                </Column>
-                <Column ColumnSize="ColumnSize.Is3.WithOffset">
-                        <Addons>
-                        <Addon AddonType="AddonType.Start">
-                            <AddonLabel><Icon Name="IconName.Search" /></AddonLabel>
-                        </Addon>
-                        <Addon AddonType="AddonType.Body">
-                            <TextEdit Placeholder="Search" Text="@searchString" TextChanged="@OnFilterValueChanged"></TextEdit>
-                        </Addon>
-                    </Addons>
-                </Column>
-            </Row>
+            <AssetGridSearch GItem="GItem" Title="@Title" SearchStringChanged="OnGridSearchChanged" />
+
             <DataGrid @ref="Grid"
-                      TItem="GItem" Data="Elements" @bind-SelectedRow="@selectedItem" 
-                      CustomFilter="@OnModelFilter"
-                      ShowPager 
-                      ShowPageSizes
-                      PagerPosition="DataGridPagerPosition.Bottom"
-                      PagerOptions="new(){ ButtonSize=Size.Small }">
-                 <DataGridColumns>
-                     <DataGridCommandColumn />
-                     @foreach (var column in Columns)
-                     {
-                        <DataGridColumn Field="@column.Field" Caption="@column.Title" Sortable="@column.Sortable" />
-                     }
+                        TItem="GItem" Data="Elements" @bind-SelectedRow="@selectedItem"
+                        CustomFilter="@OnModelFilter"
+                        ShowPager
+                        ShowPageSizes
+                        PagerPosition="DataGridPagerPosition.Bottom"
+                        PagerOptions="new(){ ButtonSize=Size.Small }">
+                    <DataGridColumns>
+                        <DataGridCommandColumn />
+                        @foreach (var column in Columns)
+                        {
+                            <DataGridColumn Field="@column.Field" Caption="@column.Caption" Sortable="@column.Sortable" />
+                        }
                 </DataGridColumns>
                 <PageButtonTemplate>
                     <Span TextColor="TextColor.Success">
@@ -70,5 +59,5 @@
     </Row>
 </CascadingValue>
 <CascadingValue Value="@this" IsFixed>
-    @AssetGridColumns
+    @ChildContent
 </CascadingValue>

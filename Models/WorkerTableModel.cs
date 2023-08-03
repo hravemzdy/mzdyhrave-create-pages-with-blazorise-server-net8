@@ -1,10 +1,11 @@
-﻿using EmployeeManagementApp.Components.ManageGrid;
+﻿using EmployeeManagementApp.Models.Interfaces;
 
 namespace EmployeeManagementApp.Models;
 
 public class WorkerTableModel : IAssetSelectItem<int>
 {
     public int Id => WorkerId;
+    public string TableId => WorkerId.ToString();
     public string Name => WorkerName;
 
     public int WorkerId { get; set; }

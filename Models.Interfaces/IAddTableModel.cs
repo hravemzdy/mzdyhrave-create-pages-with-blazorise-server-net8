@@ -1,5 +1,4 @@
-﻿namespace EmployeeManagementApp.Components.ManageGrid;
-
+﻿namespace EmployeeManagementApp.Models.Interfaces;
 public interface IAddTableModel<GItem, FItem>
 {
     GItem CreateTableModel();

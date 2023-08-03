@@ -1,9 +1,9 @@
-﻿using EmployeeManagementApp.Components.ManageGrid;
+﻿using EmployeeManagementApp.Models.Interfaces;
 using FluentValidation;
 
 namespace EmployeeManagementApp.Models;
 
-public class BuildingAddModel : IAddTableModel<BuildingTableModel, BuildingAddModel>
+public class BuildingAddModel : IClearableModel, IAddTableModel<BuildingTableModel, BuildingAddModel>
 {
     public string Title { get; set; }
 

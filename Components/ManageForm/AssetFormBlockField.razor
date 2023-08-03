@@ -1,0 +1,35 @@
+﻿@typeparam FItem 
+@inherits ComponentBase
+
+@namespace EmployeeManagementApp.Components.ManageForm
+
+@if (Template == null)
+{
+    @if (Validate)
+    {
+        <Validation Validator="ValidationRule.IsNotEmpty">
+            <Field>
+                <FieldLabel>@Label</FieldLabel>
+                <TextEdit TValue="string" Text="@CurrentValue" TextChanged="@FormValueChanged">
+                    <Feedback>
+                        <ValidationNone>@FeedbackNone</ValidationNone>
+                        <ValidationSuccess>@FeedbackGood</ValidationSuccess>
+                        <ValidationError>@FeedbackError</ValidationError>
+                    </Feedback>
+                </TextEdit>
+            </Field>
+        </Validation>
+    }
+    else
+    {
+        <Field>
+            <FieldLabel>@Label</FieldLabel>
+            <TextEdit TValue="string" Text="@CurrentValue" TextChanged="@FormValueChanged">
+            </TextEdit>
+        </Field>
+    }
+}
+else
+{
+    @Template(CurrentValue)
+}

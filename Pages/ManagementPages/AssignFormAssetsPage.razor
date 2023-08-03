@@ -9,11 +9,11 @@
 <Row Flex="Flex.JustifyContent.Center">
     <Column ColumnSize="ColumnSize.Is10">
         <Fields>
-            <ManageAssetSelect TItem="WorkerTableModel" CItem="int" Elements="WorkersElements" SelectLabel="Worker" SelectedLabel="Selected Worker:"
+            <AssetSelect TItem="WorkerTableModel" CItem="int" Elements="WorkersElements" SelectLabel="Worker" SelectedLabel="Selected Worker:"
                                CurrentValue="@WorkerValue" DefaultValue="0" CurrentValueChanged="WorkerValueChanged" />
-            <ManageAssetSelect TItem="JobTableModel" CItem="int" Elements="JobsElements" SelectLabel="Job" SelectedLabel="Selected Job:"
+            <AssetSelect TItem="JobTableModel" CItem="int" Elements="JobsElements" SelectLabel="Job" SelectedLabel="Selected Job:"
                                CurrentValue="@JobValue" DefaultValue="0" CurrentValueChanged="JobValueChanged" />
-            <ManageAssetSelect TItem="BuildingTableModel" CItem="int" Elements="BuildingsElements" SelectLabel="Building" SelectedLabel="Selected Building:"
+            <AssetSelect TItem="BuildingTableModel" CItem="int" Elements="BuildingsElements" SelectLabel="Building" SelectedLabel="Selected Building:"
                                CurrentValue="@BuildingValue" DefaultValue="0" CurrentValueChanged="BuildingValueChanged" />
         </Fields>
     </Column>
@@ -33,7 +33,6 @@
     private int BuildingValue { get; set; } 
 
     bool assignmentsSuccess = false;
-    string[] assignmentsErrors = { };
 
     private IEnumerable<WorkerTableModel> WorkersElements = new List<WorkerTableModel>();
 
