@@ -1,8 +1,10 @@
 ﻿using Blazorise.FluentValidation;
 using FluentValidation;
+using EmployeeManagementApp;
 
-namespace EmployeeManagementApp.Extensions;
-public static class BlazoriseInstaller
+namespace Microsoft.Extensions.DependencyInjection;
+
+public static class BlazorUIFrameworkInstaller
 {
     public static IServiceCollection AddBlazoriseServices(this IServiceCollection services)
     {
